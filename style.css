@@ -1,0 +1,63 @@
+
+<STYLE TYPE="text/css">
+  body {
+  font-family:verdana;
+  font-size:10px;
+  }
+
+  table {
+  border: thin solid #000000;
+  border-collapse: collapse;
+  font-family:verdana;
+  font-size:10px;
+  }
+
+  td, tr {
+  border: thin solid #6495ed;
+  padding: 2px;
+  }
+
+  tr.Class_TR_Template0 {
+  background-color:white;
+  }
+
+  tr.Class_TR_Template1 {
+  background-color:lightgray;
+  }
+
+  tr.Class_TR_Template3 {
+  background-color:pink;
+  }
+
+  tr.Class_TR_Template4 {
+    background-color:beige;
+    }
+
+  input {
+  background-color:PINK;
+  font-family:verdana;
+  font-size:10px;
+  }
+  input.class_Date {width:110px;}
+  input.class_Prix {width:60px;}
+  input.class_commentaire {width:300px;}
+  input.class_text  {width:110px;}
+  input[type=submit] {width:50px;}
+  
+  select {
+  background-color:PINK;
+  font-family:verdana;
+  font-size:10px;
+  }
+  select.class_select_Date {width:100px;}
+  select.class_select_Objet{width:250px;}
+  select.class_select_Categorie{width:130px;}
+  select.class_select_Tri{width:100px;}
+
+  A:link {text-decoration: none}
+  A:visited {text-decoration: none}
+  A:active {text-decoration: none}
+  A:hover {text-decoration: none; color: red;}
+
+
+</STYLE>
