@@ -43,6 +43,7 @@
   input.class_commentaire {width:300px;}
   input.class_text  {width:110px;}
   input[type=submit] {width:50px;}
+  input[type=checkbox] {vertical-align: middle;}
   
   select {
   background-color:PINK;

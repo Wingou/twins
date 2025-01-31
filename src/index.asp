@@ -1,19 +1,20 @@
 ﻿<% response.Buffer=false %>
 <% Server.ScriptTimeout = 1000000 %> 
 <!-- #include file="../rsConnOpen.asp"-->
-<!--#include file="functions.asp"-->
-<!--#include file="view/rechDoublons.asp"-->
+<!-- #include file="actions.asp" -->
 <html>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <header>
-    <title>DeitMondon - Dieux des Mondes</title>
+    <Title>TWINS - Recherche de doublons ou compare</Title>
     <!-- #include file="../style.css" -->
   </header>
-  <body>
-
-    <!-- #include file="rechDoublons.asp" -->
-  </body>
+  <BODY style="font-size:12px;font-family:arial">
+    <!-- #include file="main.asp" -->
+  </BODY>
   <footer>
-    <!-- #include file="../rsConnClose.asp"-->
+    
   </footer>
 </html>
+
+<!-- #include file="../rsConnClose.asp"-->
+

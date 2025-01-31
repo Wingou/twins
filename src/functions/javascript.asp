@@ -1,16 +1,16 @@
 <%
-function incrementCpt(iCptVal)
+function incrementCpt
 %>
     <script language=javascript>
-    document.getElementById("idCptLecture").value='<%=iCptVal%>';
+    document.getElementById("idCptLecture").value++;
     </script>
 <%
 end function
 
-function incrementCptRecherche(iCptRechVal)
+function incrementCptRecherche
 %>
     <script language=javascript>
-    document.getElementById("idCptRecherche").value='<%=iCptRechVal%>';
+    document.getElementById("idCptRecherche").value++;
     </script>
 <%
 end function

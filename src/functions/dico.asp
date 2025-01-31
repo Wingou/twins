@@ -2,7 +2,7 @@
 Function Dico(valueToTranslate)
 
     Select Case valueToTranslate
-    Case "OUi"
+    Case "OUI"
         translatedValue = "Y"
     Case else
         translatedValue=valueToTranslate

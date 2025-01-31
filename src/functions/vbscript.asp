@@ -28,8 +28,50 @@ sub ListFolderContents(path_, sourceFolder_, firstSourceFolderId_)
                 sql="SELECT @@IDENTITY AS fileId;"
                 Set rs = cnx.execute(sql)
 
-                incrementCpt(i)
+
+                incrementCpt
                 updateLabelCtp "idLabelCptLecture", (relativeFolderForCpt(x.Path, sourceFolder_))
+            next
+    end if
+end sub
+
+
+sub FindDuplicateInCompareFolder(path_, compareFolder_, firstFolderId_)
+        dim fs_, folder_, item_, url_
+        set fs_ = CreateObject("Scripting.FileSystemObject")
+
+    if fs_.FolderExists(path_) then
+
+            set folder_ = fs_.GetFolder(path_)
+
+            for each item_ in folder_.SubFolders
+                FindDuplicateInCompareFolder item_, compareFolder_, firstFolderId_
+            next
+            for each x in folder_.Files
+                folder = x.ParentFolder
+                folder = replace(folder, "'", "''")
+
+                name=x.Name
+                name = replace(name, "'", "''")
+                
+                fileDate=x.DateLastModified
+                fileSize=x.Size
+                fileType=x.Type
+                
+                sql="SELECT count(id) FROM file WHERE name='"&name&"' AND id_source="&firstFolderId_&" AND fileSize="&fileSize&";"
+                'response.write "<br>"&sql
+                Set rs = cnx.execute(sql)
+                incrementCptRecherche
+                'response.write "<br>count = "&rs(0)
+                if rs(0)>0 then
+                    toFolder = replace(folder, compareFolder, saveFolder)
+                    fromFullName = folder&"\"&name
+                    toFullName = toFolder&"\"&replace(name, " ", "_")
+                    setValidFolder toFolder, saveFolder
+                    copier fromFullName, toFullName
+                    incrementCptDoublon
+                end if
+
             next
     end if
 end sub
@@ -43,9 +85,7 @@ function fileRename(f__)
 end function
 
 function setValidFolder(toFolder_, copieDirDoublon_)
-
         singleFolders = split(replace(toFolder_, copieDirDoublon_ , ""), "\")
-
         currentFolder=copieDirDoublon_
         for iFolder=0 to UBound(singleFolders)
             singleFolder=singleFolders(iFolder)
@@ -56,31 +96,21 @@ function setValidFolder(toFolder_, copieDirDoublon_)
                 end if
             end if
         next
-
 end function
 
 function copier(from_, to_)
+        if fs.FileExists(to_) then to_ = fileRename(to_)
 
-        if fs.FileExists(to_) then
-            to_ = fileRename(to_)
-        end if
+       ' response.write "<br>from: "&from_
+       ' response.write "<br>to: "&to_
 
-
-        '  response.write "<br>from: "&from_
-        '  response.write "<br>to: "&to_
-
-        if fs.FileExists(from_) then fs.MoveFile from_, toFullName
-
-
-        
+        if fs.FileExists(from_) then fs.MoveFile from_, to_
 
         if fs.FolderExists(from_) then
             if fs.SubFolders(from_).Files.Count=0 and fs.SubFolders(from_).SubFolders.Count=0 then
                     fs.SubFolders(from_) = replace(from_, last, "xxxxxxxxxxxxxxxxxxxxxxxxxx")
                     end if
         end if
-
-
 end function
 
 function log(logLabel_, logVal)
@@ -119,4 +149,33 @@ function displayTrueTwins (tpMin, tpMax, title, idSource_)
 
 end function
 
+
+function fillDatabaseReturnIdSource (sourceFolder_)
+
+        ' Vérif si l'on a le dossier en base
+        sql="SELECT COUNT(file.id) AS nbFiles FROM source INNER JOIN file ON source.id = file.id_source WHERE source.folder='"&sourceFolder_&"';"
+        Set rs = cnx.execute(sql)        
+        nbFiles = rs("nbFiles")
+
+        if nbFiles=0 then
+            ' Si la base est vide, on la remplit + Récup id_source
+            sql="INSERT INTO source (folder) VALUES ('"&sourceFolder_&"');"
+            cnx.execute(sql)
+            sql="SELECT @@IDENTITY AS sourceId;"
+            Set rs = cnx.execute(sql)
+            id_source = rs.Fields("sourceId").value
+
+            i=0
+            ListFolderContents sourceFolder_,sourceFolder_,id_source
+            iMax=i
+        else
+            ' Si la base est remplie,récup id_source
+            sql="SELECT id AS sourceId FROM source WHERE folder='"&sourceFolder_&"';"
+            Set rs = cnx.execute(sql)
+            id_source = rs.Fields("sourceId").value
+        end if
+
+        fillDatabaseReturnIdSource = id_source
+
+end function
 %>
