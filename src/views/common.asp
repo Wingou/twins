@@ -2,18 +2,17 @@
 function viewTitle
 %>
     <center><font style="font-size:1rem;"><b>TWINS</b></font>
-    <font style="font-size:0.8rem;">Find duplicated media by WTL</font>
-    <br>
-    <font style="font-size:0.6rem;">08/08/2021 - last update : 31/01/2025</font></center>
+    <br><font style="font-size:0.8rem;">Find duplicated media by WTL</font>
+    <br><font style="font-size:0.6rem;">08/08/2021 - last update : 31/01/2025</font></center>
 <%
 end function
 
-function viewGetFolder(initSourceFolder_, initSaveFolder_, initCompareFolder_)
+function viewGetFolder(initSourceFolder_, initSaveFolder_, initDeltaFolder_)
     
     if initSaveFolder_="" then initSaveFolder_="C:\Users\WingQiqi\Desktop\doublons"
     placeholderSourceFolder="Enter the SOURCE path"
-    placeholderCompareFolder="Enter the path of the COMPARE folder. Don't if the media are all in the SOURCE Folder"
-%>
+    placeholderDeltaFolder="Enter the path of the DELTA folder. Don't if the media are all in the SOURCE Folder"
+    %>
     <hr>
         <form method=GET action="index.asp">
         <div style="display:flex;flex-direction:column">
@@ -27,10 +26,10 @@ function viewGetFolder(initSourceFolder_, initSaveFolder_, initCompareFolder_)
             </div>
             <div style="display:flex;flex-direction:row">
                 <div style="width:8rem;">
-                    Compare Folder
+                    Delta Folder
                 </div>
                 <div style="flex:auto">
-                    <input type="text" name="compareFolder" placeholder="<%=placeholderCompareFolder%>" value="<%=initCompareFolder_%>" style="width:100%;">
+                    <input type="text" name="deltaFolder" placeholder="<%=placeholderDeltaFolder%>" value="<%=initDeltaFolder_%>" style="width:100%;">
                 </div>
             </div>
             <div style="display:flex;flex-direction:row">
@@ -46,7 +45,7 @@ function viewGetFolder(initSourceFolder_, initSaveFolder_, initCompareFolder_)
                 </div>
                 <div style="flex:auto">
                     <input type="submit" value="GO"> <font style="font-size: 0.7rem;"> <i>IUSR account MUST have a total access on these folders</i></font>
-                     - <a href="index.asp?choix=delete">RESET</a> -
+                     - <a href="index.asp?sourceFolder=<%=sourceFolder%>&deltaFolder=<%=deltaFolder%>&saveFolder=<%=saveFolder%>&choix=reset">RESET</a> -
                 </div>
             </div>
         </div>

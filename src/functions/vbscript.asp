@@ -3,8 +3,6 @@ sub ListFolderContents(path_, sourceFolder_, firstSourceFolderId_)
         dim fs_, folder_, item_, url_
         set fs_ = CreateObject("Scripting.FileSystemObject")
 
-
-
     if fs_.FolderExists(path_) then
 
             set folder_ = fs_.GetFolder(path_)
@@ -32,24 +30,30 @@ sub ListFolderContents(path_, sourceFolder_, firstSourceFolderId_)
                 incrementCpt
                 updateLabelCtp "idLabelCptLecture", (relativeFolderForCpt(x.Path, sourceFolder_))
             next
+    else
+    %>
+        <br><font family-size="12px" color="RED">
+        <b>SOURCE Folder <i><%=path_%></i> cannot be read !</b>
+        <br>A total access must be granted to <i>IUSR account</i>.
+        <br>Please verify or use another folder.
+        </font>
+    <%
     end if
 end sub
 
 
-sub FindDuplicateInCompareFolder(path_, compareFolder_, firstFolderId_)
+sub FindDuplicateInDeltaFolder(path_, deltaFolder_, firstFolderId_)
         dim fs_, folder_, item_, url_
         set fs_ = CreateObject("Scripting.FileSystemObject")
 
     if fs_.FolderExists(path_) then
-
             set folder_ = fs_.GetFolder(path_)
 
             for each item_ in folder_.SubFolders
-                FindDuplicateInCompareFolder item_, compareFolder_, firstFolderId_
+                FindDuplicateInDeltaFolder item_, deltaFolder_, firstFolderId_
             next
             for each x in folder_.Files
                 folder = x.ParentFolder
-                folder = replace(folder, "'", "''")
 
                 name=x.Name
                 name = replace(name, "'", "''")
@@ -57,22 +61,49 @@ sub FindDuplicateInCompareFolder(path_, compareFolder_, firstFolderId_)
                 fileDate=x.DateLastModified
                 fileSize=x.Size
                 fileType=x.Type
-                
+
                 sql="SELECT count(id) FROM file WHERE name='"&name&"' AND id_source="&firstFolderId_&" AND fileSize="&fileSize&";"
-                'response.write "<br>"&sql
                 Set rs = cnx.execute(sql)
+
                 incrementCptRecherche
-                'response.write "<br>count = "&rs(0)
+                updateLabelCtp "idLabelCptRecherche", (relativeFolderForCpt (path_&"\"&name, deltaFolder_))
+
                 if rs(0)>0 then
-                    toFolder = replace(folder, compareFolder, saveFolder)
-                    fromFullName = folder&"\"&name
+                    toFolder = replace(folder, deltaFolder, saveFolder)
+                    fromFullName = folder&"\"&replace(name, "''", "'")
                     toFullName = toFolder&"\"&replace(name, " ", "_")
                     setValidFolder toFolder, saveFolder
                     copier fromFullName, toFullName
                     incrementCptDoublon
+                    updateLabelCtp "idLabelCptDoublon", (relativeFolderForCpt (path_&"\"&name, deltaFolder_))
                 end if
-
             next
+    end if
+end sub
+
+sub FindEmptyFolders (path_, sourceFolder_, firstSourceFolderId_)
+        dim fs_, folder_, item_, url_
+        set fs_ = CreateObject("Scripting.FileSystemObject")
+
+    if fs_.FolderExists(path_) then
+            set folder_ = fs_.GetFolder(path_)
+            for each item_ in folder_.SubFolders
+                FindEmptyFolders item_, sourceFolder_, firstSourceFolderId_
+            next
+            for each dossier in folder_.SubFolders
+                if dossier.Files.Count=0 and dossier.SubFolders.Count=0 then
+                    response.write "<br>"&dossier
+                    incrementEmptyFolder
+                end if
+            next
+    else
+    %>
+        <br><font family-size="12px" color="RED">
+        <b>SOURCE Folder <i><%=path_%></i> cannot be read !</b>
+        <br>A total access must be granted to <i>IUSR account</i>.
+        <br>Please verify or use another folder.
+        </font>
+    <%
     end if
 end sub
 
@@ -99,17 +130,14 @@ function setValidFolder(toFolder_, copieDirDoublon_)
 end function
 
 function copier(from_, to_)
-        if fs.FileExists(to_) then to_ = fileRename(to_)
-
-       ' response.write "<br>from: "&from_
-       ' response.write "<br>to: "&to_
-
-        if fs.FileExists(from_) then fs.MoveFile from_, to_
-
-        if fs.FolderExists(from_) then
-            if fs.SubFolders(from_).Files.Count=0 and fs.SubFolders(from_).SubFolders.Count=0 then
-                    fs.SubFolders(from_) = replace(from_, last, "xxxxxxxxxxxxxxxxxxxxxxxxxx")
-                    end if
+        fromFolder = replace(from_, "''", "'")
+        toFolder = replace(to_, "''", "'")
+        if fs.FileExists(toFolder) then toFolder = fileRename(toFolder)
+        if fs.FileExists(fromFolder) then fs.MoveFile fromFolder, toFolder
+        if fs.FolderExists(fromFolder) then
+            if fs.SubFolders(fromFolder).Files.Count=0 and fs.SubFolders(fromFolder).SubFolders.Count=0 then
+                    fs.SubFolders(fromFolder) = replace(fromFolder, last, "xxxxxxxxxxxxxxxxxxxxxxxxxx")
+            end if
         end if
 end function
 
@@ -131,10 +159,9 @@ function displayTrueTwins (tpMin, tpMax, title, idSource_)
     rs.MoveNext
     WEND
     iTrueTwinsSameName=i
-
     
     if i>0 then
-        response.write "<hr><b>TRUE TWINS - "&title&"</b><hr>"
+        response.write "<hr><b>TRUE DUPLICATES - "&title&"</b><hr>"
         for i=1 to iTrueTwinsSameName
             name=t_NameTrueTwinsSameName(i)
             fullFolder=t_FolderTrueTwinsSameName(i)
@@ -146,9 +173,7 @@ function displayTrueTwins (tpMin, tpMax, title, idSource_)
             viewTrueTwinsFiles name, fullFolder
         next
     end if
-
 end function
-
 
 function fillDatabaseReturnIdSource (sourceFolder_)
 
@@ -176,6 +201,5 @@ function fillDatabaseReturnIdSource (sourceFolder_)
         end if
 
         fillDatabaseReturnIdSource = id_source
-
 end function
 %>

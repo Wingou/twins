@@ -5,27 +5,29 @@ function viewCpt(viewCptFolder_)
     <hr>
     <div style="display:flex;flex-direction:column">
         <div style="display:flex;flex-direction:row">
-            <div style="width:5rem;">Lecture</div>
+            <div style="width:8rem;">Collected</div>
             <div><input style="width:5rem;" id="idCptLecture" value="0" type="text"></div>
             <div style="flex:auto"><input style="width:100%;" id="idLabelCptLecture" value="" type="text"></div>
         </div>
         <div style="display:flex;flex-direction:row">
-            <div style="width:5rem;">Recherche</div>
+            <div style="width:8rem;">Analysed</div>
             <div><input style="width:5rem;" id="idCptRecherche" value="0" type="text"></div>
             <div style="flex:auto"><input style="width:100%;" id="idLabelCptRecherche" value="" type="text"></div>
         </div>
         <div style="display:flex;flex-direction:row">
-            <div style="width:5rem;">Doublons</div>
+            <div style="width:8rem;">Duplicates</div>
             <div><input style="width:5rem;" id="idCptDoublon" value="0" type="text"></div>
             <div style="flex:auto"><input style="width:100%;" id="idLabelCptDoublon" value="" type="text"></div>
         </div>
+        <div style="display:flex;flex-direction:row">
+            <div style="width:8rem;">Empty Folders</div>
+            <div><input style="width:5rem;" id="idCptEmptyFolder" value="0" type="text"></div>
+            <div style="flex:auto"><input style="width:100%;" id="idLabelCptEmptyFolder" value="" type="text"></div>
+        </div>
     </div>
-
 <%
     end if
 end function
-
-
 
 function viewTwinsFiles(displaySourceFullName_, displayFromFullName_, displayToFullName_)
 %>
@@ -63,7 +65,6 @@ function viewTwinsFiles(displaySourceFullName_, displayFromFullName_, displayToF
 <%
 end function
 
-
 function viewTrueTwinsFiles(displayName_, displayFullFolder_)
 %>
             <div style="display:flex; flex-direction:column;">
@@ -75,9 +76,6 @@ function viewTrueTwinsFiles(displayName_, displayFullFolder_)
                         <%=displayFullFolder_ %>
                     </div>
                 </div>
-                    
-                        
-                
             </div>
             <% if displayName_="" then %>
             <hr>

@@ -25,6 +25,16 @@ function incrementCptDoublon
 <%
 end function
 
+function incrementEmptyFolder
+%>
+    <script language=javascript>
+    var valStr=document.getElementById("idCptEmptyFolder");
+    var valNum=parseInt(valStr.value, 10)+1;
+    valStr.value=valNum
+    </script>
+<%
+end function
+
 function relativeFolderForCpt(cptVal__, sourceFolder__)
     cptVal_ = cptVal__
     cptVal_=replace(cptVal_, sourceFolder__, "")

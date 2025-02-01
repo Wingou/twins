@@ -1,23 +1,24 @@
 ﻿<!--#include file="views/common.asp"-->
 <!--#include file="functions.asp"-->
 <%
+    choix=request("choix")
     sourceFolder=request("sourceFolder")
     saveFolder=request("saveFolder")
-    compareFolder=request("compareFolder")
+    deltaFolder=request("deltaFolder")
 
     viewTitle
-    viewGetFolder sourceFolder, saveFolder, compareFolder
+    viewGetFolder sourceFolder, saveFolder, deltaFolder
 
-    if sourceFolder<>"" and compareFolder="" then
+    if sourceFolder<>"" and deltaFolder="" and choix="" then
 %>
     <!--#include file="views/duplicates.asp" -->
     <!--#include file="findDuplicates.asp"-->
 <%
     end if
 
-    if sourceFolder<>"" and compareFolder<>"" then
+    if sourceFolder<>"" and deltaFolder<>"" and choix="" then
 %>
-  <!--#include file="compare.asp"-->
+    <!--#include file="findDelta.asp"-->
 <%
     end if
 %>

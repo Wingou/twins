@@ -64,7 +64,6 @@ for i=1 to iMax
     updateLabelCtp "idLabelCptRecherche", (relativeFolderForCpt(sourceFullName, sourceFolder))
 
     folderPath = t_Folder(i)
-    folderPath = replace(folderPath, "H:\Principal\GO\Photos\","")
     folderPath = replace(folderPath, "\","/")
     srcPreview = "http://localhost/photos/"&folderPath&"/"&t_Name(i)
             
